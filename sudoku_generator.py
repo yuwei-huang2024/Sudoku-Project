@@ -1,4 +1,4 @@
-import math,random
+import math,random,sys, pygame
 
 """
 This was adapted from a GeeksforGeeks article "Program for Sudoku Generator" by Aarti_Rathi and Ankur Trisal
@@ -209,3 +209,93 @@ def generate_sudoku(size, removed):
     sudoku.remove_cells()
     board = sudoku.get_board()
     return board
+
+class Cell:
+    def __init__(self, value, row, col, screen):
+        self.value = value
+        self.row = row
+        self.col = col
+        self.screen = screen
+
+    def set_cell_value(self, value):
+        self.value = value
+
+    def set_sketched_value(self, value):
+        self.value = value
+
+    def draw(self):
+        text_font = pygame.font.SysFont('Arial', 50)
+
+        #Test values for cell
+        pygame.draw.rect(self.screen, (255, 255, 255), (0,0,200,200))
+
+
+class Board:
+    def __init__(self, width, height, screen, difficulty):
+        self.width = width
+        self.height = height
+        self.screen = screen
+        self.difficulty = difficulty
+        self.cells = [
+            [Cell(self.screen[i][j],i,j) for j in range (width)]
+            for i in range(height)
+        ]
+
+    def draw(self):
+        #Unsure how we're defining difficulty so I will just use a string for now
+        if self.difficulty == "Easy":
+            pass
+        elif self.difficulty == "Medium":
+            pass
+        else:
+            pass
+
+
+    def select(self, row, col):
+        pass
+
+    def click(self, row, col):
+        #Very rough, just wanna mess with event parameters
+        currentEvent = pygame.event.get()
+
+        if currentEvent.type == pygame.MOUSEBUTTONDOWN:
+            x, y = currentEvent.pos
+            if 0 <= x < self.width and 0 <= y < self.height:
+                return (row,col)
+
+        return None
+
+
+
+    def clear(self):
+        #This basically does nothing, need to see how board generates non-user values
+        Cell.value = None
+
+    def sketch(self, value):
+        pass
+
+    def place_number(self, value):
+        pass
+
+    def reset_to_original(self):
+        pass
+
+    def is_full(self):
+        for row in self.cells:
+            for cell in row:
+                if cell.value == 0:
+                    return False
+
+        return True
+
+    def update_board(self):
+        pass
+
+    def find_empty(self):
+        for row in self.cells:
+            for cell in row:
+                if cell.value == 0:
+                    return (cell.row, cell.col)
+
+    def check_board(self):
+        pass
