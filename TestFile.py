@@ -110,6 +110,7 @@ draw_grid()
 
 
 '''
+
 while True:
     #event loop
     for event in pygame.event.get():

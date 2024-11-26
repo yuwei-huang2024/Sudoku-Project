@@ -1,5 +1,5 @@
 from sudoku_generator import *
-import pygame, sys
+import pygame
 
 pygame.init()
 pygame.font.init()
