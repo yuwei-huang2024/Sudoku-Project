@@ -6,8 +6,6 @@ pygame.font.init()
 screen = pygame.display.set_mode((600,600))
 running = True
 
-
-
 win = True
 my_font = pygame.font.SysFont('Times New Roman', 30)
 if win:

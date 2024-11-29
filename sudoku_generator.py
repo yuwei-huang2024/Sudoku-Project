@@ -1,126 +1,56 @@
-import math,random,sys, pygame
+import random, pygame, sys
+pygame.init()
+pygame.font.init()
 
-"""
-This was adapted from a GeeksforGeeks article "Program for Sudoku Generator" by Aarti_Rathi and Ankur Trisal
-https://www.geeksforgeeks.org/program-sudoku-generator/
-
-"""
 
 class SudokuGenerator:
-    '''
-	create a sudoku board - initialize class variables and set up the 2D board
-	This should initialize:
-	self.row_length		- the length of each row
-	self.removed_cells	- the total number of cells to be removed
-	self.board			- a 2D list of ints to represent the board
-	self.box_length		- the square root of row_length
-
-	Parameters:
-    row_length is the number of rows/columns of the board (always 9 for this project)
-    removed_cells is an integer value - the number of cells to be removed
-
-	Return:
-	None
-    '''
     def __init__(self, row_length, removed_cells):
-        pass
+        self.row_length = row_length
+        self.removed_cells = removed_cells
+        self.board = [[0 for _ in range(row_length)] for _ in range(row_length)]
+        self.box_length = 3
+        # :param row_length: always 9
+        # :param removed_cells: cells to be cleared
 
-    '''
-	Returns a 2D python list of numbers which represents the board
-
-	Parameters: None
-	Return: list[list]
-    '''
     def get_board(self):
-        pass
+        return self.board  # returning current board
 
-    '''
-	Displays the board to the console
-    This is not strictly required, but it may be useful for debugging purposes
-
-	Parameters: None
-	Return: None
-    '''
     def print_board(self):
-        pass
+        for row in self.board:
+            print(" ".join(str(num) if num != 0 else '.' for num in row))  # for debugging??
 
-    '''
-	Determines if num is contained in the specified row (horizontal) of the board
-    If num is already in the specified row, return False. Otherwise, return True
 
-	Parameters:
-	row is the index of the row we are checking
-	num is the value we are looking for in the row
-	
-	Return: boolean
-    '''
     def valid_in_row(self, row, num):
-        pass
+        return num not in self.board[row]
 
-    '''
-	Determines if num is contained in the specified column (vertical) of the board
-    If num is already in the specified col, return False. Otherwise, return True
-
-	Parameters:
-	col is the index of the column we are checking
-	num is the value we are looking for in the column
-	
-	Return: boolean
-    '''
     def valid_in_col(self, col, num):
-        pass
+        return num not in [self.board[row][col] for row in range(self.row_length)]
 
-    '''
-	Determines if num is contained in the 3x3 box specified on the board
-    If num is in the specified box starting at (row_start, col_start), return False.
-    Otherwise, return True
-
-	Parameters:
-	row_start and col_start are the starting indices of the box to check
-	i.e. the box is from (row_start, col_start) to (row_start+2, col_start+2)
-	num is the value we are looking for in the box
-
-	Return: boolean
-    '''
     def valid_in_box(self, row_start, col_start, num):
-        pass
-    
-    '''
-    Determines if it is valid to enter num at (row, col) in the board
-    This is done by checking that num is unused in the appropriate, row, column, and box
+        for i in range(3):
+            for j in range(3):
+                if self.board[row_start + i][col_start + j] == num:
+                    return False
+        return True
 
-	Parameters:
-	row and col are the row index and col index of the cell to check in the board
-	num is the value to test if it is safe to enter in this cell
-
-	Return: boolean
-    '''
     def is_valid(self, row, col, num):
-        pass
+        return (
+                self.valid_in_row(row, num)
+                and self.valid_in_col(col, num)
+                and self.valid_in_box(row - row % 3, col - col % 3, num)
+        )
 
-    '''
-    Fills the specified 3x3 box with values
-    For each position, generates a random digit which has not yet been used in the box
 
-	Parameters:
-	row_start and col_start are the starting indices of the box to check
-	i.e. the box is from (row_start, col_start) to (row_start+2, col_start+2)
-
-	Return: None
-    '''
     def fill_box(self, row_start, col_start):
-        pass
-    
-    '''
-    Fills the three boxes along the main diagonal of the board
-    These are the boxes which start at (0,0), (3,3), and (6,6)
+        nums = list(range(1, 10))
+        random.shuffle(nums)
+        for i in range(3):
+            for j in range(3):
+                self.board[row_start + i][col_start + j] = nums.pop()
 
-	Parameters: None
-	Return: None
-    '''
     def fill_diagonal(self):
-        pass
-
+        for i in range(0, self.row_length, 3):
+            self.fill_box(i, i)
     '''
     DO NOT CHANGE
     Provided for students
@@ -134,7 +64,7 @@ class SudokuGenerator:
 	boolean (whether or not we could solve the board)
     '''
     def fill_remaining(self, row, col):
-        if (col >= self.row_length and row < self.row_length - 1):
+        if col >= self.row_length and row < self.row_length - 1:
             row += 1
             col = 0
         if row >= self.row_length and col >= self.row_length:
@@ -185,7 +115,14 @@ class SudokuGenerator:
 	Return: None
     '''
     def remove_cells(self):
-        pass
+        removed_count = 0
+        while removed_count < self.removed_cells:
+            row = random.randint(0, self.row_length - 1)
+            col = random.randint(0, self.row_length - 1)
+            if self.board[row][col] != 0:
+                self.board[row][col] = 0
+                removed_count += 1
+
 
 '''
 DO NOT CHANGE
@@ -202,10 +139,14 @@ removed is the number of cells to clear (set to 0)
 
 Return: list[list] (a 2D Python list to represent the board)
 '''
+
+solution = []
+
 def generate_sudoku(size: object, removed: object) -> object:
     sudoku = SudokuGenerator(size, removed)
     sudoku.fill_values()
-    board = sudoku.get_board()
+    global solution # it says not to change, but added this to save solution or else solution was not saving anywhere?
+    solution = sudoku.get_board()
     sudoku.remove_cells()
     board = sudoku.get_board()
     return board
@@ -299,3 +240,268 @@ class Board:
 
     def check_board(self):
         pass
+
+
+WIDTH = 600
+HEIGHT = 600
+LINE_COLOR = (0, 0, 255)
+screen = pygame.display.set_mode((WIDTH, HEIGHT+120))
+pygame.display.set_caption("Sudoku")
+
+#initializing the board
+def initialize_board():
+    # 1st approach
+    return [["-" for i in range(9)] for j in range(9)]
+board = initialize_board()
+
+def draw_sudoku_screen(): # changed draw grid to this function
+    # drawing horizontal cell lines
+    screen.fill((209, 138, 84))
+    pygame.draw.line(
+        screen,
+        (0, 0, 0),
+        (0, 66),
+        (WIDTH, 66),
+        3
+    )
+    for i in range(1, 3):
+        pygame.draw.line(
+            screen,
+            (0, 0, 0),
+            (0, 66 + 202 * i),
+            (WIDTH, 66 + 202 * i),
+            3
+        )
+    pygame.draw.line(
+        screen,
+        (0, 0, 0),
+        (0, 133),
+        (WIDTH, 133),
+        3
+    )
+    for i in range(1, 3):
+        pygame.draw.line(
+            screen,
+            (0, 0, 0),
+            (0, 133 + 202 * i),
+            (WIDTH, 133 + 202 * i),
+            3
+        )
+    # drawing vertical cell lines
+    pygame.draw.line(
+        screen,
+        (0, 0, 0),
+        (66, 0),
+        (66, HEIGHT),
+        3
+    )
+    for i in range(1, 3):
+        pygame.draw.line(
+            screen,
+            (0, 0, 0),
+            (66 + 202 * i, 0),
+            (66 + 202 * i, WIDTH),
+            3
+        )
+    pygame.draw.line(
+        screen,
+        (0, 0, 0),
+        (133, 0),
+        (133, HEIGHT),
+        3
+    )
+    for i in range(1, 3):
+        pygame.draw.line(
+            screen,
+            (0, 0, 0),
+            (202 * i + 133, 0),
+            (202 * i + 133, HEIGHT),
+            3
+        )
+    # drawing vertical border lines
+    for i in range(1, 3):
+        pygame.draw.line(
+            screen,
+            LINE_COLOR,
+            (69 * i + 133 * i, 0),
+            (69 * i + 133 * i, HEIGHT),
+            7
+        )
+    # drawing horizontal border lines
+    for i in range(1, 3):
+        pygame.draw.line(
+            screen,
+            LINE_COLOR,
+            (0, 69 * i + 133 * i),
+            (WIDTH, 69 * i + 133 * i),
+            7
+
+        )
+    pygame.draw.line(
+        screen,
+        (0, 0, 0),
+        (0, HEIGHT + 8),
+        (WIDTH, HEIGHT + 8),
+        15
+    )
+
+    my_font = pygame.font.SysFont('Times New Roman', 30)
+    reset_rect = pygame.Rect(100, 630, 100, 50)
+    restart_rect = pygame.Rect(240, 630, 120, 50)
+    exit_rect = pygame.Rect(400, 630, 100, 50)
+
+    pygame.draw.rect(screen, (0, 0, 0), reset_rect)
+    pygame.draw.rect(screen, (0, 0, 0), restart_rect)
+    pygame.draw.rect(screen, (0, 0, 0), exit_rect)
+
+    pygame.draw.rect(screen, (209, 138, 84), (105, 635, 90, 40))
+    pygame.draw.rect(screen, (209, 138, 84), (245, 635, 110, 40))
+    pygame.draw.rect(screen, (209, 138, 84), (405, 635, 90, 40))
+
+    text_surface = my_font.render('Reset', False, (0, 0, 0))
+    screen.blit(text_surface, (115, 638))
+    text_surface = my_font.render('Restart', False, (0, 0, 0))
+    screen.blit(text_surface, (250, 638))
+    text_surface = my_font.render('Exit', False, (0, 0, 0))
+    screen.blit(text_surface, (410, 638))
+
+    pygame.display.update()
+    return reset_rect, restart_rect, exit_rect
+
+def draw_start_screen():
+    my_font = pygame.font.SysFont('Times New Roman', 30)
+    screen.fill((209, 138, 84))
+
+    text_surface = my_font.render('Welcome to Sudoku!', False, (0, 0, 0))
+    screen.blit(text_surface, (175, 200))
+    text_surface = my_font.render('Select difficulty:', False, (0, 0, 0))
+    screen.blit(text_surface, (185, 300))
+
+    easy_rect = pygame.Rect(100, 390, 100, 50)
+    medium_rect = pygame.Rect(240, 390, 120, 50)
+    hard_rect = pygame.Rect(400, 390, 100, 50)
+
+    pygame.draw.rect(screen, (0, 0, 0), easy_rect)
+    pygame.draw.rect(screen, (0, 0, 0), medium_rect)
+    pygame.draw.rect(screen, (0, 0, 0), hard_rect)
+
+    pygame.draw.rect(screen, (209, 138, 84), (105, 395, 90, 40))
+    pygame.draw.rect(screen, (209, 138, 84), (245, 395, 110, 40))
+    pygame.draw.rect(screen, (209, 138, 84), (405, 395, 90, 40))
+
+    text_surface = my_font.render('Easy', False, (0, 0, 0))
+    screen.blit(text_surface, (115, 398))
+    text_surface = my_font.render('Medium', False, (0, 0, 0))
+    screen.blit(text_surface, (250, 398))
+    text_surface = my_font.render('Hard', False, (0, 0, 0))
+    screen.blit(text_surface, (410, 398))
+
+    pygame.display.update()
+    return easy_rect, medium_rect, hard_rect
+
+def draw_numbers():
+    pass
+def draw_win_end_screen():
+    my_font = pygame.font.SysFont('Times New Roman', 30)
+
+    screen.fill((209, 138, 84))
+    text_surface = my_font.render('You win!!', False, (0, 0, 0))
+    screen.blit(text_surface, (230, 200))
+    exit_rect = pygame.Rect(220, 290, 100, 50)
+    pygame.draw.rect(screen, (0, 0, 0), exit_rect)
+    pygame.draw.rect(screen, (209, 138, 84), (225, 295, 90, 40))
+    pygame.display.update()
+    text_surface_2 = my_font.render('EXIT', False, (0, 0, 0))
+    screen.blit(text_surface_2, (230, 300))
+
+    return exit_rect
+def draw_lose_end_screen():
+    my_font = pygame.font.SysFont('Times New Roman', 30)
+
+    screen.fill((209, 138, 84))
+    text_surface = my_font.render('Game Over :(', False, (0, 0, 0))
+    screen.blit(text_surface, (230, 200))
+    restart_rect = pygame.Rect(220, 290, 160, 50)
+    pygame.draw.rect(screen, (0, 0, 0), restart_rect)
+    pygame.draw.rect(screen, (209, 138, 84), (225, 295, 150, 40))
+    pygame.display.update()
+    text_surface_2 = my_font.render('RESTART', False, (0, 0, 0))
+    screen.blit(text_surface_2, (230, 300))
+
+    return restart_rect
+
+
+end_loop = False
+while True:
+    # event loop
+    while True: # for start screen
+        if end_loop:
+            end_loop = False
+            break
+        easy_rect, medium_rect, hard_rect = draw_start_screen()
+        for event in pygame.event.get():
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if easy_rect.collidepoint(event.pos):
+                    removed_cells = 30
+                    print("1")
+                    end_loop = True
+                    break
+                elif medium_rect.collidepoint(event.pos):
+                    removed_cells = 40
+                    print('2')
+                    end_loop = True
+                    break
+                elif hard_rect.collidepoint(event.pos):
+                    removed_cells = 50
+                    print('3')
+                    end_loop = True
+                    break
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+
+    while True: # for sudoku screen
+        if end_loop:
+            end_loop = False
+            break
+        reset_rect, restart_rect, exit_rect = draw_sudoku_screen()
+        pygame.display.update()
+        for event in pygame.event.get():
+            #purely for testing purposes
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    if reset_rect.collidepoint(event.pos):
+                        win = True
+                        end_loop = True
+                    elif restart_rect.collidepoint(event.pos):
+                        win = False
+                        end_loop = True
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+    while True: #end screen win scenario
+        if end_loop:
+            pygame.quit()
+            sys.exit()
+        if win:
+            exit_rect = draw_win_end_screen()
+            pygame.display.update()
+            for event in pygame.event.get():
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    if exit_rect.collidepoint(event.pos):
+                        end_loop = True
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+        else:
+            restart_rect = draw_lose_end_screen()
+            pygame.display.update()
+            for event in pygame.event.get():
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    # also exits at the moment, fix later
+                    if restart_rect.collidepoint(event.pos):
+                        end_loop = True
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+
