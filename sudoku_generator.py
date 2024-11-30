@@ -157,6 +157,10 @@ class Board:
         self.height = height
         self.screen = screen
         self.difficulty = difficulty
+        #self.cells = [
+        #    [Cell(self.board[i][j],i, j) for j in range(width)]
+        #    for i in range(height)
+        #]
 
     def draw(self):
         pass
@@ -165,20 +169,25 @@ class Board:
 
     def select(self, row, col):
         for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                running = False
             if event.type == pygame.MOUSEBUTTONDOWN:
                 event.pos = pygame.mouse.get_pos()
-                print(event.pos)
+
+
+            print(event.pos)
 
     def click(self, row, col):
-        #Very rough, just wanna mess with event parameters
-        currentEvent = pygame.event.get()
+        #Very rough, just wanna mess with event parameter
+        for event in pygame.event.get():
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                print("test")
+                x, y = event.pos
+                if 0 <= x <= 600 and 0 <= y <= 600:
+                    newRow = x // 68
+                    newCol = y // 68
 
-        if currentEvent.type == pygame.MOUSEBUTTONDOWN:
-            x, y = currentEvent.pos
-            if 0 <= x < self.width and 0 <= y < self.height:
-                return (row,col)
+                #Need to figure out positioning fully
+
+                    return (newRow, newCol)
 
         return None
 
@@ -195,7 +204,9 @@ class Board:
         pass
 
     def reset_to_original(self):
-        pass
+        for cell in self.cells:
+            if cell.value != 0 and cell.isUser == True:
+                cell.value = 0
 
     def is_full(self):
         for row in self.cells:
@@ -225,6 +236,7 @@ class Cell:
         self.col = col
         self.screen = screen
         self.current = False
+        self.isUser = False
 
 
     def set_cell_value(self, value):
@@ -258,6 +270,7 @@ class Cell:
 
 
 
+
 WIDTH = 600
 HEIGHT = 600
 LINE_COLOR = (0, 0, 255)
@@ -274,17 +287,20 @@ def draw_sudoku_screen(): # changed draw grid to this function
     # drawing horizontal cell lines
     screen.fill((209, 138, 84))
 
-    cells = []
+
+    #print(board[0][0])
 
     for row in range(9):
         for col in range(9):
-            cell = Cell(0, row, col, screen)
-            cells.append(cell)
+            cell = Cell(1, row, col, screen)
+            board[row][col] = cell.value
             cell.draw()
+
+    pygame.display.update()
+
 
     #Setting cell values as 0 for now so it comes back as clear, should all be centered inside each cell
 
-    #pygame.display.flip()
 
 
 
@@ -400,9 +416,6 @@ def draw_sudoku_screen(): # changed draw grid to this function
     text_surface = my_font.render('Exit', False, (0, 0, 0))
     screen.blit(text_surface, (410, 638))
 
-    #cell = Cell(0, 0, 0, 0)
-
-    #cell.draw()
 
     pygame.display.update()
     return reset_rect, restart_rect, exit_rect
@@ -514,6 +527,10 @@ while True:
             break
         reset_rect, restart_rect, exit_rect = draw_sudoku_screen()
         pygame.display.update()
+
+        #print(board.click(event.pos[0], event.pos[1]))
+        #Just used this for testing for now
+
         for event in pygame.event.get():
             #purely for testing purposes
             if event.type == pygame.MOUSEBUTTONDOWN:
