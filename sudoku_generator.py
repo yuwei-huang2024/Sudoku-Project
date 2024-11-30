@@ -151,49 +151,25 @@ def generate_sudoku(size: object, removed: object) -> object:
     board = sudoku.get_board()
     return board
 
-class Cell:
-    def __init__(self, value, row, col, screen):
-        self.value = value
-        self.row = row
-        self.col = col
-        self.screen = screen
-
-    def set_cell_value(self, value):
-        self.value = value
-
-    def set_sketched_value(self, value):
-        self.value = value
-
-    def draw(self):
-        text_font = pygame.font.SysFont('Arial', 50)
-
-        #Test values for cell
-        pygame.draw.rect(self.screen, (255, 255, 255), (0,0,200,200))
-
-
 class Board:
     def __init__(self, width, height, screen, difficulty):
         self.width = width
         self.height = height
         self.screen = screen
         self.difficulty = difficulty
-        self.cells = [
-            [Cell(self.screen[i][j],i,j) for j in range (width)]
-            for i in range(height)
-        ]
 
     def draw(self):
-        #Unsure how we're defining difficulty so I will just use a string for now
-        if self.difficulty == "Easy":
-            pass
-        elif self.difficulty == "Medium":
-            pass
-        else:
-            pass
+        pass
+    #Need to make this work with draw_sudoku_screen
 
 
     def select(self, row, col):
-        pass
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                event.pos = pygame.mouse.get_pos()
+                print(event.pos)
 
     def click(self, row, col):
         #Very rough, just wanna mess with event parameters
@@ -210,7 +186,7 @@ class Board:
 
     def clear(self):
         #This basically does nothing, need to see how board generates non-user values
-        Cell.value = None
+        Cell.value = 0
 
     def sketch(self, value):
         pass
@@ -242,6 +218,46 @@ class Board:
         pass
 
 
+class Cell:
+    def __init__(self, value, row, col, screen):
+        self.value = value
+        self.row = row
+        self.col = col
+        self.screen = screen
+        self.current = False
+
+
+    def set_cell_value(self, value):
+        self.value = value
+
+    def set_sketched_value(self, value):
+        self.sketched_value = value
+
+    def draw(self):
+        my_font = pygame.font.SysFont('Times New Roman', 30)
+        color = (255, 255, 255)
+
+        cellRow = self.row * 65 + self.row * 3
+        cellCol = self.col * 65 + self.col * 3
+
+
+        pygame.draw.rect(self.screen, color, (cellCol, cellRow, 65, 65))
+
+        if self.value != 0:
+            text_surf = my_font.render(str(self.value), True, (0,0,0))
+
+            #using to test
+            text_rect = text_surf.get_rect(center=((cellCol+32.5), (cellRow+32.5)))
+            self.screen.blit(text_surf, text_rect)
+
+        if self.current == True:
+            pygame.draw.rect(self.screen, (255, 0, 0), (cellCol, cellRow, 65, 65),  2)
+
+
+
+
+
+
 WIDTH = 600
 HEIGHT = 600
 LINE_COLOR = (0, 0, 255)
@@ -257,6 +273,25 @@ board = initialize_board()
 def draw_sudoku_screen(): # changed draw grid to this function
     # drawing horizontal cell lines
     screen.fill((209, 138, 84))
+
+    cells = []
+
+    for row in range(9):
+        for col in range(9):
+            cell = Cell(0, row, col, screen)
+            cells.append(cell)
+            cell.draw()
+
+    #Setting cell values as 0 for now so it comes back as clear, should all be centered inside each cell
+
+    #pygame.display.flip()
+
+
+
+
+
+
+
     pygame.draw.line(
         screen,
         (0, 0, 0),
@@ -365,6 +400,10 @@ def draw_sudoku_screen(): # changed draw grid to this function
     text_surface = my_font.render('Exit', False, (0, 0, 0))
     screen.blit(text_surface, (410, 638))
 
+    #cell = Cell(0, 0, 0, 0)
+
+    #cell.draw()
+
     pygame.display.update()
     return reset_rect, restart_rect, exit_rect
 
@@ -432,6 +471,7 @@ def draw_lose_end_screen():
 
 
 end_loop = False
+difficulty = ""
 while True:
     # event loop
     while True: # for start screen
@@ -445,22 +485,30 @@ while True:
                     removed_cells = 30
                     print("1")
                     end_loop = True
+                    difficulty = "Easy"
+                    #board = Board(600,600, pygame.display, difficulty)
                     break
                 elif medium_rect.collidepoint(event.pos):
                     removed_cells = 40
                     print('2')
                     end_loop = True
+                    difficulty = "Medium"
+                    #board = Board(600, 600, pygame.display, difficulty)
                     break
                 elif hard_rect.collidepoint(event.pos):
                     removed_cells = 50
                     print('3')
                     end_loop = True
+                    difficulty = "Hard"
+                    #board = Board(600, 600, 1, difficulty)
                     break
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
 
     while True: # for sudoku screen
+
+
         if end_loop:
             end_loop = False
             break
