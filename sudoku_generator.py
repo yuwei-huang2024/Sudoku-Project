@@ -157,10 +157,12 @@ class Board:
         self.height = height
         self.screen = screen
         self.difficulty = difficulty
-        #self.cells = [
-        #    [Cell(self.board[i][j],i, j) for j in range(width)]
-        #    for i in range(height)
-        #]
+        self.board = initialize_board()
+        self.selected = None
+        self.cells = [
+            [Cell(self.board[i][j],i, j, screen) for j in range(9)]
+            for i in range(9)
+        ]
 
     def draw(self):
         pass
@@ -168,12 +170,11 @@ class Board:
 
 
     def select(self, row, col):
-        for event in pygame.event.get():
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                event.pos = pygame.mouse.get_pos()
+        if self.selected != None:
+            self.selected = None
+        self.selected = self.cells[row][col]
+        self.selected.selected = True
 
-
-            print(event.pos)
 
     def click(self, row, col):
         #Very rough, just wanna mess with event parameter
@@ -211,7 +212,7 @@ class Board:
     def is_full(self):
         for row in self.cells:
             for cell in row:
-                if cell.value == 0:
+                if cell.value == "-":
                     return False
 
         return True
@@ -222,7 +223,7 @@ class Board:
     def find_empty(self):
         for row in self.cells:
             for cell in row:
-                if cell.value == 0:
+                if cell.value == "-":
                     return (cell.row, cell.col)
 
     def check_board(self):
@@ -235,7 +236,7 @@ class Cell:
         self.row = row
         self.col = col
         self.screen = screen
-        self.current = False
+        self.selected = False
         self.isUser = False
 
 
@@ -262,8 +263,8 @@ class Cell:
             text_rect = text_surf.get_rect(center=((cellCol+32.5), (cellRow+32.5)))
             self.screen.blit(text_surf, text_rect)
 
-        if self.current == True:
-            pygame.draw.rect(self.screen, (255, 0, 0), (cellCol, cellRow, 65, 65),  2)
+        if self.selected == True:
+            pygame.draw.rect(self.screen, (255, 0, 0), (cellRow, cellCol, 65, 65),  2)
 
 
 
@@ -293,7 +294,9 @@ def draw_sudoku_screen(): # changed draw grid to this function
     for row in range(9):
         for col in range(9):
             cell = Cell(1, row, col, screen)
-            board[row][col] = cell.value
+
+            board.cells[row][col].value = cell.value
+            #print(board.cells[row][col].value)
             cell.draw()
 
     pygame.display.update()
@@ -499,7 +502,7 @@ while True:
                     print("1")
                     end_loop = True
                     difficulty = "Easy"
-                    #board = Board(600,600, pygame.display, difficulty)
+                    board = Board(WIDTH,HEIGHT, pygame.display, difficulty)
                     break
                 elif medium_rect.collidepoint(event.pos):
                     removed_cells = 40
@@ -531,10 +534,27 @@ while True:
         #print(board.click(event.pos[0], event.pos[1]))
         #Just used this for testing for now
 
+
+        #Used to test selection, cell can be selected but leads to some jank with display :)
+
+        # click = board.click(event.pos[0], event.pos[1])
+        #
+        # print(click)
+        #
+        # if click != None:
+        #     board.selected = board.cells[click[0]][click[1]]
+        #     board.selected.selected = True
+        #     board.selected.screen = screen
+        #     board.selected.draw()
+        #     pygame.display.flip()
+        #     continue
+
         for event in pygame.event.get():
             #purely for testing purposes
+
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if event.type == pygame.MOUSEBUTTONDOWN:
+
                     if reset_rect.collidepoint(event.pos):
                         win = True
                         end_loop = True
