@@ -196,10 +196,14 @@ class Board:
 
     def clear(self):
         #This basically does nothing, need to see how board generates non-user values
-        Cell.value = 0
+        for row in self.cells:
+            for cell in row:
+                if cell.isUser == True:
+                    cell.value = "-"
+                    cell.sketched_value = "-"
 
     def sketch(self, value):
-        pass
+        self.sketched_value = value
 
     def place_number(self, value):
         pass
@@ -300,17 +304,6 @@ def draw_sudoku_screen(): # changed draw grid to this function
             cell.draw()
 
     pygame.display.update()
-
-
-    #Setting cell values as 0 for now so it comes back as clear, should all be centered inside each cell
-
-
-
-
-
-
-
-
     pygame.draw.line(
         screen,
         (0, 0, 0),
@@ -487,6 +480,7 @@ def draw_lose_end_screen():
 
 
 end_loop = False
+
 difficulty = ""
 while True:
     # event loop
@@ -509,14 +503,14 @@ while True:
                     print('2')
                     end_loop = True
                     difficulty = "Medium"
-                    #board = Board(600, 600, pygame.display, difficulty)
+                    board = Board(600, 600, pygame.display, difficulty)
                     break
                 elif hard_rect.collidepoint(event.pos):
                     removed_cells = 50
                     print('3')
                     end_loop = True
                     difficulty = "Hard"
-                    #board = Board(600, 600, 1, difficulty)
+                    board = Board(WIDTH, HEIGHT, pygame.display, difficulty)
                     break
             if event.type == pygame.QUIT:
                 pygame.quit()
@@ -529,7 +523,7 @@ while True:
             end_loop = False
             break
         reset_rect, restart_rect, exit_rect = draw_sudoku_screen()
-        pygame.display.update()
+        #pygame.display.update()
 
         #print(board.click(event.pos[0], event.pos[1]))
         #Just used this for testing for now
@@ -539,15 +533,14 @@ while True:
 
         # click = board.click(event.pos[0], event.pos[1])
         #
-        # print(click)
-        #
         # if click != None:
         #     board.selected = board.cells[click[0]][click[1]]
         #     board.selected.selected = True
         #     board.selected.screen = screen
         #     board.selected.draw()
-        #     pygame.display.flip()
-        #     continue
+        #     pass
+
+        pygame.display.update()
 
         for event in pygame.event.get():
             #purely for testing purposes
