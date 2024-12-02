@@ -580,7 +580,7 @@ while True:
                         end_loop = True
                     elif restart_rect.collidepoint(event.pos):
                         win = False
-                        end_loop = True
+                        end_loop = Truer
             if event.type == pygame.KEYDOWN and board.selected != None and board.selected.isUser != True:
 
                 if event.key == pygame.K_RETURN and board.selected.sketched != "":
@@ -589,7 +589,7 @@ while True:
                     draw_sudoku_screen()
                     continue
 
-                if event.key != pygame.K_RETURN and board.selected.value != board.selected.sketched:
+                if board.selected.value != board.selected.sketched and 49 <= event.key and event.key <= 57 :
                     board.selected.set_sketched_value(chr(event.key))
                     # board.selected.value = chr(event.key)
                     draw_sudoku_screen()
