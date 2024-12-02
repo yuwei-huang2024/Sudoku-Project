@@ -254,11 +254,11 @@ class Cell:
         my_font = pygame.font.SysFont('Times New Roman', 30)
         color = (255, 255, 255)
 
-        cellRow = self.row * 65 + self.row * 3
-        cellCol = self.col * 65 + self.col * 3
+        cellRow = self.row * 64 + self.row * 3
+        cellCol = self.col * 64 + self.col * 3
 
 
-        pygame.draw.rect(self.screen, color, (cellCol, cellRow, 65, 65))
+        pygame.draw.rect(self.screen, color, (cellCol, cellRow, 67, 67))
 
         if self.value != 0:
             text_surf = my_font.render(str(self.value), True, (0,0,0))
