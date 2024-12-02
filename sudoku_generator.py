@@ -344,24 +344,24 @@ def draw_sudoku_screen(): # changed draw grid to this function
                 )
 
     my_font = pygame.font.SysFont('Times New Roman', 30)
-    reset_rect = pygame.Rect(100, 630, 100, 50)
-    restart_rect = pygame.Rect(240, 630, 120, 50)
-    exit_rect = pygame.Rect(400, 630, 100, 50)
+    reset_rect = pygame.Rect(60, 675, 100, 50)
+    restart_rect = pygame.Rect(263, 675, 120, 50)
+    exit_rect = pygame.Rect(486, 675, 100, 50)
 
     pygame.draw.rect(screen, (0, 0, 0), reset_rect)
     pygame.draw.rect(screen, (0, 0, 0), restart_rect)
     pygame.draw.rect(screen, (0, 0, 0), exit_rect)
 
-    pygame.draw.rect(screen, (209, 138, 84), (105, 635, 90, 40))
-    pygame.draw.rect(screen, (209, 138, 84), (245, 635, 110, 40))
-    pygame.draw.rect(screen, (209, 138, 84), (405, 635, 90, 40))
+    pygame.draw.rect(screen, (209, 138, 84), (65, 680, 90, 40))
+    pygame.draw.rect(screen, (209, 138, 84), (268, 680, 110, 40))
+    pygame.draw.rect(screen, (209, 138, 84), (491, 680, 90, 40))
 
     text_surface = my_font.render('Reset', False, (0, 0, 0))
-    screen.blit(text_surface, (115, 638))
+    screen.blit(text_surface, (75, 683))
     text_surface = my_font.render('Restart', False, (0, 0, 0))
-    screen.blit(text_surface, (250, 638))
+    screen.blit(text_surface, (280, 683))
     text_surface = my_font.render('Exit', False, (0, 0, 0))
-    screen.blit(text_surface, (410, 638))
+    screen.blit(text_surface, (510, 683))
 
 
     pygame.display.update()
