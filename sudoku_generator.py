@@ -304,93 +304,44 @@ def draw_sudoku_screen(): # changed draw grid to this function
             cell.draw()
 
     pygame.display.update()
-    pygame.draw.line(
-        screen,
-        (0, 0, 0),
-        (0, 66),
-        (WIDTH, 66),
-        3
-    )
-    for i in range(1, 3):
-        pygame.draw.line(
-            screen,
-            (0, 0, 0),
-            (0, 66 + 202 * i),
-            (WIDTH, 66 + 202 * i),
-            3
-        )
-    pygame.draw.line(
-        screen,
-        (0, 0, 0),
-        (0, 133),
-        (WIDTH, 133),
-        3
-    )
-    for i in range(1, 3):
-        pygame.draw.line(
-            screen,
-            (0, 0, 0),
-            (0, 133 + 202 * i),
-            (WIDTH, 133 + 202 * i),
-            3
-        )
-    # drawing vertical cell lines
-    pygame.draw.line(
-        screen,
-        (0, 0, 0),
-        (66, 0),
-        (66, HEIGHT),
-        3
-    )
-    for i in range(1, 3):
-        pygame.draw.line(
-            screen,
-            (0, 0, 0),
-            (66 + 202 * i, 0),
-            (66 + 202 * i, WIDTH),
-            3
-        )
-    pygame.draw.line(
-        screen,
-        (0, 0, 0),
-        (133, 0),
-        (133, HEIGHT),
-        3
-    )
-    for i in range(1, 3):
-        pygame.draw.line(
-            screen,
-            (0, 0, 0),
-            (202 * i + 133, 0),
-            (202 * i + 133, HEIGHT),
-            3
-        )
-    # drawing vertical border lines
-    for i in range(1, 3):
-        pygame.draw.line(
-            screen,
-            LINE_COLOR,
-            (69 * i + 133 * i, 0),
-            (69 * i + 133 * i, HEIGHT),
-            7
-        )
-    # drawing horizontal border lines
-    for i in range(1, 3):
-        pygame.draw.line(
-            screen,
-            LINE_COLOR,
-            (0, 69 * i + 133 * i),
-            (WIDTH, 69 * i + 133 * i),
-            7
+	
+    #cell lines
+    for i in range(0,10):
+            pygame.draw.line(
+                screen,
+                (255,255,255),
+                (0, 3 + i * 71),
+                (646, 3 + i * 71),
+                7
 
-        )
-    pygame.draw.line(
-        screen,
-        (0, 0, 0),
-        (0, HEIGHT + 8),
-        (WIDTH, HEIGHT + 8),
-        15
-    )
+            )
+            pygame.draw.line(
+                screen,
+                (255, 255, 255),
+                (3 + i * 71, 1),
+                (3 + i * 71, 646),
+                7
+
+            )
+    #border lines
+    for i in range(0,10):
+            if i % 3 == 0:
+                pygame.draw.line(
+                    screen,
+                    (0, 0, 0),
+                    (3 + i * 71, 0),
+                    (3 + i * 71, 646),
+                    7
+
+                )
+                pygame.draw.line(
+                    screen,
+                    (0, 0, 0),
+                    (0, 3 + i * 71),
+                    (646, 3 + i * 71),
+                    7
+
+                )
 
     my_font = pygame.font.SysFont('Times New Roman', 30)
     reset_rect = pygame.Rect(100, 630, 100, 50)
@@ -503,7 +454,7 @@ while True:
                     print('2')
                     end_loop = True
                     difficulty = "Medium"
-                    board = Board(600, 600, pygame.display, difficulty)
+                    board = Board(646, 646, pygame.display, difficulty)
                     break
                 elif hard_rect.collidepoint(event.pos):
                     removed_cells = 50
