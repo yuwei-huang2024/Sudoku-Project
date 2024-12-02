@@ -178,11 +178,15 @@ class Board:
 
     def click(self, row, col):
         #Very rough, just wanna mess with event parameter
+        #CHANGED TO MAKE COL/ROW ACCURATE
         x, y = event.pos
+        print(f"Clicked at: ({x}, {y})")
         if 0 <= x <= 600 and 0 <= y <= 600:
-            newRow = x // 68
-            newCol = y // 68
+            newCol = x // 68
+            newRow = y // 68
+            print(f"Mapped to: Row {newRow}, Column {newCol}")
             return (newRow, newCol)
+
 
                 #Need to figure out positioning fully
 
@@ -240,17 +244,21 @@ class Cell:
         self.screen = screen
         self.selected = False
         self.isUser = False
+        self.sketched = ""
 
 
     def set_cell_value(self, value):
         self.value = value
 
     def set_sketched_value(self, value):
-        self.sketched_value = value
+        self.sketched = value
 
     def draw(self):
         my_font = pygame.font.SysFont('Times New Roman', 30)
         color = (255, 255, 255)
+
+        #Col Issue
+        #CHANGED TO MAKE ROW/COL ACCURATE
 
         cellRow = self.row * 64 + self.row * 3
         cellCol = self.col * 64 + self.col * 3
@@ -259,15 +267,26 @@ class Cell:
         pygame.draw.rect(self.screen, color, (cellCol, cellRow, 64, 64))
 
 
-        if self.value != 0:
-            text_surf = my_font.render(str(self.value), True, (0,0,0))
+
+        if self.sketched != "" and self.isUser == False:
+            text_surf = my_font.render(str(self.sketched), True, (128, 128, 128))
 
             #using to test
             text_rect = text_surf.get_rect(center=((cellCol+32.5), (cellRow+32.5)))
             self.screen.blit(text_surf, text_rect)
 
+        if self.value == self.sketched and self.isUser == False:
+            text_surf = my_font.render(str(self.value), True, (0, 0, 0))
+
+            # using to test
+            text_rect = text_surf.get_rect(center=((cellCol + 32.5), (cellRow + 32.5)))
+            self.screen.blit(text_surf, text_rect)
+            #self.isUser = True
+
+
+
         if self.selected == True:
-            pygame.draw.rect(self.screen, (255, 0, 0), (cellRow, cellCol, 64, 64),  2)
+            pygame.draw.rect(self.screen, (255, 0, 0), (cellCol, cellRow, 64, 64),  2)
 
 
 
@@ -562,12 +581,26 @@ while True:
                     elif restart_rect.collidepoint(event.pos):
                         win = False
                         end_loop = True
-                if event.type == pygame.KEYDOWN and board.selected != None:
-                     if event.key == pygame.K_2:
-                #         print("Hi")
-                        board.selected.value = event.key
-                        draw_sudoku_screen()
-                # print(board.selected)
+            if event.type == pygame.KEYDOWN and board.selected != None and board.selected.isUser != True:
+
+                if event.key == pygame.K_RETURN and board.selected.sketched != "":
+                    board.selected.set_cell_value(board.selected.sketched)
+                    print(board.selected.value)
+                    draw_sudoku_screen()
+                    continue
+
+                if event.key != pygame.K_RETURN and board.selected.value != board.selected.sketched:
+                    board.selected.set_sketched_value(chr(event.key))
+                    # board.selected.value = chr(event.key)
+                    draw_sudoku_screen()
+                    # print(board.selected)
+
+                # board.selected.set_sketched_value(chr(event.key))
+                # #board.selected.value = chr(event.key)
+                # draw_sudoku_screen()
+                # # print(board.selected)
+
+
 
 
             if event.type == pygame.QUIT:
