@@ -372,28 +372,28 @@ def draw_start_screen():
     screen.fill((209, 138, 84))
 
     text_surface = my_font.render('Welcome to Sudoku!', False, (0, 0, 0))
-    screen.blit(text_surface, (175, 200))
+    screen.blit(text_surface, (195, 200))
     text_surface = my_font.render('Select difficulty:', False, (0, 0, 0))
-    screen.blit(text_surface, (185, 300))
+    screen.blit(text_surface, (220, 300))
 
-    easy_rect = pygame.Rect(100, 390, 100, 50)
-    medium_rect = pygame.Rect(240, 390, 120, 50)
-    hard_rect = pygame.Rect(400, 390, 100, 50)
+    easy_rect = pygame.Rect(80, 390, 120, 50)
+    medium_rect = pygame.Rect(261, 390, 120, 50)
+    hard_rect = pygame.Rect(442, 390, 120, 50)
 
     pygame.draw.rect(screen, (0, 0, 0), easy_rect)
     pygame.draw.rect(screen, (0, 0, 0), medium_rect)
     pygame.draw.rect(screen, (0, 0, 0), hard_rect)
 
-    pygame.draw.rect(screen, (209, 138, 84), (105, 395, 90, 40))
-    pygame.draw.rect(screen, (209, 138, 84), (245, 395, 110, 40))
-    pygame.draw.rect(screen, (209, 138, 84), (405, 395, 90, 40))
+    pygame.draw.rect(screen, (209, 138, 84), (85, 395, 110, 40))
+    pygame.draw.rect(screen, (209, 138, 84), (266, 395, 110, 40))
+    pygame.draw.rect(screen, (209, 138, 84), (447, 395, 110, 40))
 
     text_surface = my_font.render('Easy', False, (0, 0, 0))
-    screen.blit(text_surface, (120, 398))
+    screen.blit(text_surface, (110, 398))
     text_surface = my_font.render('Medium', False, (0, 0, 0))
-    screen.blit(text_surface, (250, 398))
+    screen.blit(text_surface, (270, 398))
     text_surface = my_font.render('Hard', False, (0, 0, 0))
-    screen.blit(text_surface, (420, 398))
+    screen.blit(text_surface, (472, 398))
 
     pygame.display.update()
     return easy_rect, medium_rect, hard_rect
@@ -505,6 +505,9 @@ while True:
                     elif restart_rect.collidepoint(event.pos):
                         win = False
                         end_loop = True
+		    elif exit_rect.collidepoint(event.pos):
+                        pygame.quit()
+                        sys.exit()
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
