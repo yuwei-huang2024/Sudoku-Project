@@ -276,8 +276,8 @@ class Cell:
 
 
 
-WIDTH = 600
-HEIGHT = 600
+WIDTH = 646
+HEIGHT = 646
 LINE_COLOR = (0, 0, 255)
 screen = pygame.display.set_mode((WIDTH, HEIGHT+120))
 pygame.display.set_caption("Sudoku")
@@ -454,7 +454,7 @@ while True:
                     print('2')
                     end_loop = True
                     difficulty = "Medium"
-                    board = Board(646, 646, pygame.display, difficulty)
+                    board = Board(WIDTH, HEIGHT, pygame.display, difficulty)
                     break
                 elif hard_rect.collidepoint(event.pos):
                     removed_cells = 50
