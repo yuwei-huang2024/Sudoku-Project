@@ -178,17 +178,15 @@ class Board:
 
     def click(self, row, col):
         #Very rough, just wanna mess with event parameter
-        for event in pygame.event.get():
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                print("test")
-                x, y = event.pos
-                if 0 <= x <= 600 and 0 <= y <= 600:
-                    newRow = x // 68
-                    newCol = y // 68
+        x, y = event.pos
+        if 0 <= x <= 600 and 0 <= y <= 600:
+            newRow = x // 68
+            newCol = y // 68
+            return (newRow, newCol)
 
                 #Need to figure out positioning fully
 
-                    return (newRow, newCol)
+
 
         return None
 
@@ -258,7 +256,8 @@ class Cell:
         cellCol = self.col * 64 + self.col * 3
 
 
-        pygame.draw.rect(self.screen, color, (cellCol, cellRow, 67, 67))
+        pygame.draw.rect(self.screen, color, (cellCol, cellRow, 64, 64))
+
 
         if self.value != 0:
             text_surf = my_font.render(str(self.value), True, (0,0,0))
@@ -268,7 +267,9 @@ class Cell:
             self.screen.blit(text_surf, text_rect)
 
         if self.selected == True:
-            pygame.draw.rect(self.screen, (255, 0, 0), (cellRow, cellCol, 65, 65),  2)
+            pygame.draw.rect(self.screen, (255, 0, 0), (cellRow, cellCol, 64, 64),  2)
+
+
 
 
 
@@ -293,15 +294,15 @@ def draw_sudoku_screen(): # changed draw grid to this function
     screen.fill((209, 138, 84))
 
 
-    #print(board[0][0])
-
-    for row in range(9):
-        for col in range(9):
-            cell = Cell(1, row, col, screen)
-
-            board.cells[row][col].value = cell.value
-            #print(board.cells[row][col].value)
+    #print(board.cells[8][8])
+    for row in board.cells:
+        for cell in row:
+            cell.screen = screen
             cell.draw()
+
+
+
+
 
     pygame.display.update()
     pygame.draw.line(
@@ -523,7 +524,7 @@ while True:
             end_loop = False
             break
         reset_rect, restart_rect, exit_rect = draw_sudoku_screen()
-        #pygame.display.update()
+        pygame.display.update()
 
         #print(board.click(event.pos[0], event.pos[1]))
         #Just used this for testing for now
@@ -539,21 +540,36 @@ while True:
         #     board.selected.screen = screen
         #     board.selected.draw()
         #     pass
-
-        pygame.display.update()
-
+        #pygame.display.update()
         for event in pygame.event.get():
             #purely for testing purposes
 
             if event.type == pygame.MOUSEBUTTONDOWN:
+                selection = board.click(event.pos[0], event.pos[1])
+                if selection != None:
+                    if board.selected != None:
+                        board.selected.selected = False
+                    board.selected = board.cells[selection[0]][selection[1]]
+                    # if board.selected.selected == True:
+                    #     board.cells.selected = False
+                    board.selected.selected = True
+                    board.selected.screen = screen
+                    draw_sudoku_screen()
                 if event.type == pygame.MOUSEBUTTONDOWN:
-
                     if reset_rect.collidepoint(event.pos):
                         win = True
                         end_loop = True
                     elif restart_rect.collidepoint(event.pos):
                         win = False
                         end_loop = True
+                if event.type == pygame.KEYDOWN and board.selected != None:
+                     if event.key == pygame.K_2:
+                #         print("Hi")
+                        board.selected.value = event.key
+                        draw_sudoku_screen()
+                # print(board.selected)
+
+
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
