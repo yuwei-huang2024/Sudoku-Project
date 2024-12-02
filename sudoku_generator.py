@@ -438,11 +438,11 @@ def draw_start_screen():
     pygame.draw.rect(screen, (209, 138, 84), (405, 395, 90, 40))
 
     text_surface = my_font.render('Easy', False, (0, 0, 0))
-    screen.blit(text_surface, (115, 398))
+    screen.blit(text_surface, (120, 398))
     text_surface = my_font.render('Medium', False, (0, 0, 0))
     screen.blit(text_surface, (250, 398))
     text_surface = my_font.render('Hard', False, (0, 0, 0))
-    screen.blit(text_surface, (410, 398))
+    screen.blit(text_surface, (420, 398))
 
     pygame.display.update()
     return easy_rect, medium_rect, hard_rect
