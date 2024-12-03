@@ -142,13 +142,10 @@ removed is the number of cells to clear (set to 0)
 Return: list[list] (a 2D Python list to represent the board)
 '''
 
-solution = []
-
 def generate_sudoku(size: object, removed: object) -> object:
     sudoku = SudokuGenerator(size, removed)
     sudoku.fill_values()
-    global solution # it says not to change, but added this to save solution or else solution was not saving anywhere?
-    solution = sudoku.get_board()
+    board = sudoku.get_board()
     sudoku.remove_cells()
     board = sudoku.get_board()
     return board
@@ -184,8 +181,8 @@ class Board:
         x, y = event.pos
         print(f"Clicked at: ({x}, {y})")
         if 0 <= x <= 600 and 0 <= y <= 600:
-            newCol = x // 68
-            newRow = y // 68
+            newCol = x // 67
+            newRow = y // 67
             print(f"Mapped to: Row {newRow}, Column {newCol}")
             return (newRow, newCol)
 
@@ -262,13 +259,10 @@ class Cell:
         #Col Issue
         #CHANGED TO MAKE ROW/COL ACCURATE
 
-        cellRow = self.row * 64 + self.row * 3
-        cellCol = self.col * 64 + self.col * 3
-
+        cellRow = self.row * 64 + self.row * 3.3
+        cellCol = self.col * 64 + self.col * 3.3
 
         pygame.draw.rect(self.screen, color, (cellCol, cellRow, 64, 64))
-
-
 
         if self.sketched != "" and self.isUser == False:
             text_surf = my_font.render(str(self.sketched), True, (128, 128, 128))
@@ -284,8 +278,6 @@ class Cell:
             text_rect = text_surf.get_rect(center=((cellCol + 32.5), (cellRow + 32.5)))
             self.screen.blit(text_surf, text_rect)
             #self.isUser = True
-
-
 
         if self.selected == True:
             pygame.draw.rect(self.screen, (255, 0, 0), (cellCol, cellRow, 64, 64),  2)
@@ -313,19 +305,11 @@ board = initialize_board()
 def draw_sudoku_screen(): # changed draw grid to this function
     # drawing horizontal cell lines
     screen.fill((209, 138, 84))
-
-
     #print(board.cells[8][8])
     for row in board.cells:
         for cell in row:
             cell.screen = screen
             cell.draw()
-
-
-
-
-
-    pygame.display.update()
     pygame.draw.line(
         screen,
         (0, 0, 0),
@@ -340,6 +324,7 @@ def draw_sudoku_screen(): # changed draw grid to this function
             (0, 66 + 202 * i),
             (WIDTH, 66 + 202 * i),
             3
+
         )
     pygame.draw.line(
         screen,
@@ -542,10 +527,7 @@ while True:
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
-
     while True: # for sudoku screen
-
-
         if end_loop:
             end_loop = False
             break
@@ -581,17 +563,14 @@ while True:
                     #     board.cells.selected = False
                     board.selected.selected = True
                     board.selected.screen = screen
-                    draw_sudoku_screen()
-                if event.type == pygame.MOUSEBUTTONDOWN:
-                    if reset_rect.collidepoint(event.pos):
-                        win = True
-                        end_loop = True
-                    elif restart_rect.collidepoint(event.pos):
-                        restart_program()
-                    elif exit_rect.collidepoint(event.pos):
-                        pygame.quit()
-                        sys.exit()
-
+                elif reset_rect.collidepoint(event.pos):
+                    win = True
+                    end_loop = True
+                elif restart_rect.collidepoint(event.pos):
+                    restart_program()
+                elif exit_rect.collidepoint(event.pos):
+                    pygame.quit()
+                    sys.exit()
             if event.type == pygame.KEYDOWN and event.key == pygame.K_DOWN:
                 if selection != None and selection[0] != 8:
                     if board.selected != None:
@@ -600,9 +579,7 @@ while True:
                     selection = selection[0]+1, selection[1]
                     board.selected.selected = True
                     board.selected.screen = screen
-                    draw_sudoku_screen()
                     continue
-
             elif event.type == pygame.KEYDOWN and event.key == pygame.K_UP:
                 if selection != None and selection[0] != 0:
                     if board.selected != None:
@@ -611,8 +588,6 @@ while True:
                     selection = selection[0]-1, selection[1]
                     board.selected.selected = True
                     board.selected.screen = screen
-                    draw_sudoku_screen()
-
             elif event.type == pygame.KEYDOWN and event.key == pygame.K_LEFT:
                 if selection != None and selection[1] != 0:
                     if board.selected != None:
@@ -621,8 +596,6 @@ while True:
                     selection = selection[0], selection[1]-1
                     board.selected.selected = True
                     board.selected.screen = screen
-                    draw_sudoku_screen()
-
             elif event.type == pygame.KEYDOWN and event.key == pygame.K_RIGHT:
                 if selection != None and selection[1] != 8:
                     if board.selected != None:
@@ -631,30 +604,21 @@ while True:
                     selection = selection[0], selection[1]+1
                     board.selected.selected = True
                     board.selected.screen = screen
-                    draw_sudoku_screen()
-
             if event.type == pygame.KEYDOWN and board.selected != None and board.selected.isUser != True:
-
                 if event.key == pygame.K_RETURN and board.selected.sketched != "":
                     board.selected.set_cell_value(board.selected.sketched)
                     print(board.selected.value)
-                    draw_sudoku_screen()
                     continue
 
                 if board.selected.value != board.selected.sketched and 49 <= event.key and event.key <= 57:
                     board.selected.set_sketched_value(chr(event.key))
                     # board.selected.value = chr(event.key)
-                    draw_sudoku_screen()
                     # print(board.selected)
 
                 # board.selected.set_sketched_value(chr(event.key))
                 # #board.selected.value = chr(event.key)
                 # draw_sudoku_screen()
                 # # print(board.selected)
-
-
-
-
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
