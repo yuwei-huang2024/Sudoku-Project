@@ -1,4 +1,5 @@
 import random, pygame, sys, os
+
 pygame.init()
 pygame.font.init()
 
@@ -145,10 +146,12 @@ def main():
     def generate_sudoku(size: object, removed: object) -> object:
         sudoku = SudokuGenerator(size, removed)
         sudoku.fill_values()
-        board = sudoku.get_board()
+        global solution
+        solution = sudoku.get_board()
         sudoku.remove_cells()
         board = sudoku.get_board()
         return board
+
 
     class Board:
         def __init__(self, width, height, screen, difficulty):
@@ -231,9 +234,10 @@ def main():
         def is_full(self):
             for row in self.cells:
                 for cell in row:
-                    if cell.value == "-":
+                    if cell.value == 0:
                         return False
-
+                    # if cell.value != cell.sketched:
+                    #     return False
             return True
 
         def update_board(self):
@@ -246,8 +250,14 @@ def main():
                         return (cell.row, cell.col)
 
         def check_board(self):
-            pass
-
+            full = self.is_full()
+            if full:
+                for i in range(9):
+                    for j in range(9):
+                        # print(self.board[i][j])
+                        if self.board[i][j] != solution[i][j]:
+                            return False
+                return True
 
     class Cell:
         def __init__(self, value, row, col, screen):
@@ -515,7 +525,6 @@ def main():
 
     end_loop = False
     selection = None
-
     difficulty = ""
     while True:
         # event loop
@@ -527,7 +536,7 @@ def main():
             for event in pygame.event.get():
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if easy_rect.collidepoint(event.pos):
-                        removed_cells = 30
+                        removed_cells = 1
                         end_loop = True
                         board = Board(WIDTH,HEIGHT, screen, removed_cells)
                         initialBoard = board
@@ -654,11 +663,18 @@ def main():
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     sys.exit()
-        while True: #end screen win scenario
+                good_board = board.check_board()
+                if good_board:
+                    if_win = board.check_board()
+                    print(if_win)
+                    end_loop = True
+                    break
+        while True:
+            #end screen win scenario
             if end_loop:
                 pygame.quit()
                 sys.exit()
-            if win:
+            if if_win:
                 exit_rect, res_rect = draw_win_end_screen()
                 pygame.display.update()
                 for event in pygame.event.get():
