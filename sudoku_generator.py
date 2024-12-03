@@ -491,6 +491,7 @@ def restart_program():
 
 
 end_loop = False
+selection = None
 
 difficulty = ""
 while True:
