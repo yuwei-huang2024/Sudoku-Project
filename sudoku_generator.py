@@ -280,7 +280,7 @@ class Cell:
             #self.isUser = True
 
         if self.selected == True:
-            pygame.draw.rect(self.screen, (255, 0, 0), (cellCol, cellRow, 64, 64),  2)
+            pygame.draw.rect(self.screen, (255, 0, 0), (cellCol, cellRow, 64, 64),  4)
 
 
 
@@ -614,6 +614,13 @@ while True:
                     board.selected.set_sketched_value(chr(event.key))
                     # board.selected.value = chr(event.key)
                     # print(board.selected)
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_BACKSPACE:
+                print(selection)
+                if selection != None:
+                    board.selected.selected = False
+                    board.selected.value = ""
+                    board.selected.sketched = ""
+
 
                 # board.selected.set_sketched_value(chr(event.key))
                 # #board.selected.value = chr(event.key)
