@@ -517,13 +517,14 @@ while True:
                     end_loop = True
                     difficulty = "Easy"
                     board = Board(WIDTH,HEIGHT, pygame.display, difficulty)
+                    initialBoard = board
                     break
                 elif medium_rect.collidepoint(event.pos):
                     removed_cells = 40
                     print('2')
                     end_loop = True
                     difficulty = "Medium"
-                    board = Board(600, 600, pygame.display, difficulty)
+                    board = Board(WIDTH, HEIGHT, pygame.display, difficulty)
                     break
                 elif hard_rect.collidepoint(event.pos):
                     removed_cells = 50
@@ -582,6 +583,9 @@ while True:
                     elif restart_rect.collidepoint(event.pos):
                         win = False
                         end_loop = True
+                    elif exit_rect.collidepoint(event.pos):
+                        pygame.quit()
+                        sys.exit()
 
             if event.type == pygame.KEYDOWN and event.key == pygame.K_DOWN:
                 if selection != None and selection[0] != 8:
