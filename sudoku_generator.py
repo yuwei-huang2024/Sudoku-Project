@@ -430,7 +430,7 @@ def main():
         text_surface = my_font.render('Welcome to Sudoku!', False, (0, 0, 0))
         screen.blit(text_surface, (175, 200))
         text_surface = my_font.render('Select difficulty:', False, (0, 0, 0))
-        screen.blit(text_surface, (185, 300))
+        screen.blit(text_surface, (205, 300))
 
         easy_rect = pygame.Rect(100, 390, 100, 50)
         medium_rect = pygame.Rect(240, 390, 120, 50)
