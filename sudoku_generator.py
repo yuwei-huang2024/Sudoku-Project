@@ -604,6 +604,7 @@ while True:
                     selection = selection[0], selection[1]+1
                     board.selected.selected = True
                     board.selected.screen = screen
+
             if event.type == pygame.KEYDOWN and board.selected != None and board.selected.isUser != True:
                 if event.key == pygame.K_RETURN and board.selected.sketched != "":
                     board.selected.set_cell_value(board.selected.sketched)
@@ -614,12 +615,14 @@ while True:
                     board.selected.set_sketched_value(chr(event.key))
                     # board.selected.value = chr(event.key)
                     # print(board.selected)
+
             if event.type == pygame.KEYDOWN and event.key == pygame.K_BACKSPACE:
                 print(selection)
                 if selection != None:
-                    board.selected.selected = False
                     board.selected.value = ""
-                    board.selected.sketched = ""
+                    board.selected.sketched = " "
+                    board.selected.isUser = False
+
 
 
                 # board.selected.set_sketched_value(chr(event.key))
