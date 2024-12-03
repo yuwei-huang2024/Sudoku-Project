@@ -1,4 +1,4 @@
-import random, pygame, sys
+import random, pygame, sys, os
 pygame.init()
 pygame.font.init()
 
@@ -496,6 +496,10 @@ def draw_lose_end_screen():
     text_surface_2 = my_font.render('RESTART', False, (0, 0, 0))
     screen.blit(text_surface_2, (230, 300))
 
+def restart_program():
+    python = sys.executable
+    os.execv(python, ['python'] + sys.argv)
+
     return restart_rect
 
 
@@ -581,8 +585,7 @@ while True:
                         win = True
                         end_loop = True
                     elif restart_rect.collidepoint(event.pos):
-                        win = False
-                        end_loop = True
+                        restart_program()
                     elif exit_rect.collidepoint(event.pos):
                         pygame.quit()
                         sys.exit()
