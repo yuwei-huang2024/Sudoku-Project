@@ -561,6 +561,7 @@ while True:
         #     pass
         #pygame.display.update()
         for event in pygame.event.get():
+
             #purely for testing purposes
 
             if event.type == pygame.MOUSEBUTTONDOWN:
@@ -581,6 +582,48 @@ while True:
                     elif restart_rect.collidepoint(event.pos):
                         win = False
                         end_loop = True
+
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_DOWN:
+                if selection != None and selection[0] != 8:
+                    if board.selected != None:
+                        board.selected.selected = False
+                    board.selected = board.cells[selection[0]+1][selection[1]]
+                    selection = selection[0]+1, selection[1]
+                    board.selected.selected = True
+                    board.selected.screen = screen
+                    draw_sudoku_screen()
+                    continue
+
+            elif event.type == pygame.KEYDOWN and event.key == pygame.K_UP:
+                if selection != None and selection[0] != 0:
+                    if board.selected != None:
+                        board.selected.selected = False
+                    board.selected = board.cells[selection[0]-1][selection[1]]
+                    selection = selection[0]-1, selection[1]
+                    board.selected.selected = True
+                    board.selected.screen = screen
+                    draw_sudoku_screen()
+
+            elif event.type == pygame.KEYDOWN and event.key == pygame.K_LEFT:
+                if selection != None and selection[1] != 0:
+                    if board.selected != None:
+                        board.selected.selected = False
+                    board.selected = board.cells[selection[0]][selection[1]-1]
+                    selection = selection[0], selection[1]-1
+                    board.selected.selected = True
+                    board.selected.screen = screen
+                    draw_sudoku_screen()
+
+            elif event.type == pygame.KEYDOWN and event.key == pygame.K_RIGHT:
+                if selection != None and selection[1] != 8:
+                    if board.selected != None:
+                        board.selected.selected = False
+                    board.selected = board.cells[selection[0]][selection[1]+1]
+                    selection = selection[0], selection[1]+1
+                    board.selected.selected = True
+                    board.selected.screen = screen
+                    draw_sudoku_screen()
+
             if event.type == pygame.KEYDOWN and board.selected != None and board.selected.isUser != True:
 
                 if event.key == pygame.K_RETURN and board.selected.sketched != "":
