@@ -156,7 +156,7 @@ def main():
             self.height = height
             self.screen = screen
             self.difficulty = difficulty
-            self.board = initialize_board()
+            self.board = generate_sudoku(9, difficulty)
             self.selected = None
             self.cells = [
                 [Cell(self.board[i][j],i, j, screen) for j in range(9)]
@@ -164,7 +164,21 @@ def main():
             ]
 
         def draw(self):
-            pass
+            my_font = pygame.font.SysFont('Times New Roman', 30)
+            color = (255, 255, 255)
+
+            for row in range(9):
+                for col in range(9):
+                    if self.board[row][col] != 0:
+                        cellRow = row * 64 + row * 3.3
+                        cellCol = col * 64 + col * 3.3
+                        # pygame.draw.rect(self.screen, color, (cellCol, cellRow, 65, 65))
+
+                        text_surface = my_font.render(str(self.board[row][col]), True, (0, 0, 0))
+                        text_rect = text_surface.get_rect(center=((cellCol + 32.5), (cellRow + 32.5)))
+                        self.screen.blit(text_surface, text_rect)
+                        # using to test
+                        # self.screen.blit(text_surf, text_rect)
         #Need to make this work with draw_sudoku_screen
 
 
@@ -297,10 +311,10 @@ def main():
     pygame.display.set_caption("Sudoku")
 
     #initializing the board
-    def initialize_board():
-        # 1st approach
-        return [["-" for i in range(9)] for j in range(9)]
-    board = initialize_board()
+    # def initialize_board():
+    #     # 1st approach
+    #     return [["-" for i in range(9)] for j in range(9)]
+    # board = initialize_board()
 
     def draw_sudoku_screen(): # changed draw grid to this function
         # drawing horizontal cell lines
@@ -419,6 +433,7 @@ def main():
         text_surface = my_font.render('Exit', False, (0, 0, 0))
         screen.blit(text_surface, (425, 638))
 
+        board.draw()
 
         pygame.display.update()
         return reset_rect, restart_rect, exit_rect
@@ -513,10 +528,8 @@ def main():
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if easy_rect.collidepoint(event.pos):
                         removed_cells = 30
-                        print("1")
                         end_loop = True
-                        difficulty = "Easy"
-                        board = Board(WIDTH,HEIGHT, pygame.display, difficulty)
+                        board = Board(WIDTH,HEIGHT, screen, removed_cells)
                         initialBoard = board
                         break
                     elif medium_rect.collidepoint(event.pos):
@@ -524,14 +537,14 @@ def main():
                         print('2')
                         end_loop = True
                         difficulty = "Medium"
-                        board = Board(WIDTH, HEIGHT, pygame.display, difficulty)
+                        board = Board(WIDTH, HEIGHT, screen, removed_cells)
                         break
                     elif hard_rect.collidepoint(event.pos):
                         removed_cells = 50
                         print('3')
                         end_loop = True
                         difficulty = "Hard"
-                        board = Board(WIDTH, HEIGHT, pygame.display, difficulty)
+                        board = Board(WIDTH, HEIGHT, screen, removed_cells)
                         break
                 if event.type == pygame.QUIT:
                     pygame.quit()
