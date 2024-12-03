@@ -584,10 +584,6 @@ while True:
                         end_loop = True
                     elif restart_rect.collidepoint(event.pos):
                         restart_program()
-		    elif exit_rect.collidepoint(event.pos):
-			pygame.quit()
-			sys.exit()
-			    
 
             if event.type == pygame.KEYDOWN and event.key == pygame.K_DOWN:
                 if selection != None and selection[0] != 8:
