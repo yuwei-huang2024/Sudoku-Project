@@ -415,9 +415,9 @@ def draw_sudoku_screen(): # changed draw grid to this function
     text_surface = my_font.render('Reset', False, (0, 0, 0))
     screen.blit(text_surface, (115, 638))
     text_surface = my_font.render('Restart', False, (0, 0, 0))
-    screen.blit(text_surface, (250, 638))
+    screen.blit(text_surface, (257, 638))
     text_surface = my_font.render('Exit', False, (0, 0, 0))
-    screen.blit(text_surface, (410, 638))
+    screen.blit(text_surface, (425, 638))
 
 
     pygame.display.update()
@@ -483,11 +483,11 @@ def draw_lose_end_screen():
     text_surface_2 = my_font.render('RESTART', False, (0, 0, 0))
     screen.blit(text_surface_2, (230, 300))
 
+    return restart_rect
+
 def restart_program():
     python = sys.executable
     os.execv(python, ['python'] + sys.argv)
-
-    return restart_rect
 
 
 end_loop = False
@@ -567,7 +567,7 @@ while True:
                     win = True
                     end_loop = True
                 elif restart_rect.collidepoint(event.pos):
-                    restart_program()
+                    os.execv(sys.executable, ['python'] + sys.argv)
                 elif exit_rect.collidepoint(event.pos):
                     pygame.quit()
                     sys.exit()
