@@ -263,7 +263,9 @@ def main():
 
                 # check rows
                 for i in range(9):
-                    row = self.board[i]
+                    row = []
+                    for j in range(9):
+                        row.append(int(self.cells[i][j].value))
                     row_set = set(row)
                     if len(row_set) != 9:
                         print("row false")
@@ -273,7 +275,7 @@ def main():
                 for i in range(9):
                     col = []
                     for j in range(9):
-                        col.append(self.board[j][i])
+                        col.append(int(self.cells[j][i].value))
                     col_set = set(col)
                     if len(col_set) != 9:
                         return False
@@ -285,7 +287,7 @@ def main():
                         row_num = cell_coordinates[i][j][
                                       0] - 1  # minus 1 is to make coordinates match up with computer talk
                         col_num = cell_coordinates[i][j][1] - 1  # (start at 0 and not 1)
-                        box.append(self.board[row_num][col_num])
+                        box.append(int(self.cells[row_num][col_num].value))
                     box_set = set(box)
                     if len(box_set) != 9:
                         print("box fail")
@@ -562,7 +564,7 @@ def main():
             for event in pygame.event.get():
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if easy_rect.collidepoint(event.pos):
-                        removed_cells = 1
+                        removed_cells = 10
                         end_loop = True
                         board = Board(WIDTH,HEIGHT, screen, removed_cells)
                         initialBoard = board
