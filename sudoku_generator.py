@@ -250,13 +250,47 @@ def main():
                         return (cell.row, cell.col)
 
         def check_board(self):
-            full = self.is_full()
-            if full:
+            if board.is_full():
+                cell_coordinates = [[[1, 1], [1, 2], [1, 3], [2, 1], [2, 2], [2, 3], [3, 1], [3, 2], [3, 3]],
+                                    [[1, 4], [1, 5], [1, 6], [2, 4], [2, 5], [2, 6], [3, 4], [3, 5], [3, 6]],
+                                    [[1, 7], [1, 8], [1, 9], [2, 7], [2, 8], [2, 9], [3, 7], [3, 8], [3, 9]],
+                                    [[4, 1], [4, 2], [4, 3], [5, 1], [5, 2], [5, 3], [6, 1], [6, 2], [6, 3]],
+                                    [[4, 4], [4, 5], [4, 6], [5, 4], [5, 5], [5, 6], [6, 4], [6, 5], [6, 6]],
+                                    [[4, 7], [4, 8], [4, 9], [5, 7], [5, 8], [5, 9], [6, 7], [6, 8], [6, 9]],
+                                    [[7, 1], [7, 2], [7, 3], [8, 1], [8, 2], [8, 3], [9, 1], [9, 2], [9, 3]],
+                                    [[7, 4], [7, 5], [7, 6], [8, 4], [8, 5], [8, 6], [9, 4], [9, 5], [9, 6]],
+                                    [[7, 7], [7, 8], [7, 9], [8, 7], [8, 8], [8, 9], [9, 7], [9, 8], [9, 9]]]
+
+                # check rows
                 for i in range(9):
+                    row = self.board[i]
+                    row_set = set(row)
+                    if len(row_set) != 9:
+                        print("row false")
+                        return False
+
+                # column
+                for i in range(9):
+                    col = []
                     for j in range(9):
-                        # print(self.board[i][j])
-                        if self.board[i][j] != solution[i][j]:
-                            return False
+                        col.append(self.board[j][i])
+                    col_set = set(col)
+                    if len(col_set) != 9:
+                        return False
+
+                # check 3 by 3 boxes
+                for i in range(9):  # loop through each 3x3 box
+                    box = []
+                    for j in range(9):  # loop through each cell in 3x3
+                        row_num = cell_coordinates[i][j][
+                                      0] - 1  # minus 1 is to make coordinates match up with computer talk
+                        col_num = cell_coordinates[i][j][1] - 1  # (start at 0 and not 1)
+                        box.append(self.board[row_num][col_num])
+                    box_set = set(box)
+                    if len(box_set) != 9:
+                        print("box fail")
+                        return False
+
                 return True
 
     class Cell:
@@ -305,14 +339,6 @@ def main():
 
             if self.selected == True:
                 pygame.draw.rect(self.screen, (255, 0, 0), (cellCol, cellRow, 64, 64),  4)
-
-
-
-
-
-
-
-
 
     WIDTH = 600
     HEIGHT = 600
@@ -663,10 +689,10 @@ def main():
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     sys.exit()
-                good_board = board.check_board()
-                if good_board:
-                    if_win = board.check_board()
-                    print(if_win)
+                full_board = board.is_full()
+                if full_board:
+                    win_condition = board.check_board()
+                    print(win_condition)
                     end_loop = True
                     break
         while True:
@@ -674,7 +700,7 @@ def main():
             if end_loop:
                 pygame.quit()
                 sys.exit()
-            if if_win:
+            if win_condition:
                 exit_rect, res_rect = draw_win_end_screen()
                 pygame.display.update()
                 for event in pygame.event.get():
