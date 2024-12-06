@@ -538,16 +538,24 @@ def main():
         my_font = pygame.font.SysFont('Times New Roman', 30)
 
         screen.fill((209, 138, 84))
-        text_surface = my_font.render('Game Over :(', False, (0, 0, 0))
-        screen.blit(text_surface, (230, 200))
-        restart_rect = pygame.Rect(220, 290, 160, 50)
-        pygame.draw.rect(screen, (0, 0, 0), restart_rect)
-        pygame.draw.rect(screen, (209, 138, 84), (225, 295, 150, 40))
-        pygame.display.update()
-        text_surface_2 = my_font.render('RESTART', False, (0, 0, 0))
-        screen.blit(text_surface_2, (230, 300))
+        text_surface_incorrect = my_font.render('Incorrect Board!', False, (0, 0, 0))
+        screen.blit(text_surface_incorrect, (200, 200))
+        text_surface_gameover = my_font.render("Game Over!", False, (0, 0, 0))
+        screen.blit(text_surface_gameover, (225, 250))
+        # Restart Button
+        res_rect = pygame.Rect(250, 400, 100, 50)
+        pygame.draw.rect(screen, (0, 0, 0), res_rect)
+        pygame.draw.rect(screen, (209, 138, 84), (255, 405, 90, 40))
+        text_surface_res = my_font.render("Restart", False, (0, 0, 0))
+        screen.blit(text_surface_res, (257, 408))
+        # Exit Button
+        exit_rect = pygame.Rect(250, 500, 100, 50)
+        pygame.draw.rect(screen, (0, 0, 0), exit_rect)
+        pygame.draw.rect(screen, (209, 138, 84), (255, 505, 90, 40))
+        text_surface_2 = my_font.render('Exit', False, (0, 0, 0))
+        screen.blit(text_surface_2, (275, 508))
 
-        return restart_rect
+        return exit_rect, res_rect
 
     def restart_program():
         python = sys.executable
@@ -698,12 +706,14 @@ def main():
                         pygame.quit()
                         sys.exit()
             else:
-                restart_rect = draw_lose_end_screen()
+                exit_rect, res_rect = draw_lose_end_screen()
                 pygame.display.update()
                 for event in pygame.event.get():
                     if event.type == pygame.MOUSEBUTTONDOWN:
                         # also exits at the moment, fix later
-                        if restart_rect.collidepoint(event.pos):
+                        if res_rect.collidepoint(event.pos):
+                            main()
+                        if exit_rect.collidepoint(event.pos):
                             end_loop = True
                     if event.type == pygame.QUIT:
                         pygame.quit()
