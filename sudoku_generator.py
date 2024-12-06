@@ -142,14 +142,17 @@ def main():
     
     Return: list[list] (a 2D Python list to represent the board)
     '''
-
     def generate_sudoku(size: object, removed: object) -> object:
         sudoku = SudokuGenerator(size, removed)
         sudoku.fill_values()
-        global solution
-        solution = sudoku.get_board()
+        global initial_board
+        board = sudoku.get_board()
         sudoku.remove_cells()
         board = sudoku.get_board()
+        initial_board = board
+        print(initial_board)
+        print(len(initial_board))
+        print(initial_board[0][0])
         return board
 
 
@@ -564,23 +567,18 @@ def main():
             for event in pygame.event.get():
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if easy_rect.collidepoint(event.pos):
-                        removed_cells = 10
+                        removed_cells = 30
                         end_loop = True
                         board = Board(WIDTH,HEIGHT, screen, removed_cells)
-                        initialBoard = board
                         break
                     elif medium_rect.collidepoint(event.pos):
                         removed_cells = 40
-                        print('2')
                         end_loop = True
-                        difficulty = "Medium"
                         board = Board(WIDTH, HEIGHT, screen, removed_cells)
                         break
                     elif hard_rect.collidepoint(event.pos):
                         removed_cells = 50
-                        print('3')
                         end_loop = True
-                        difficulty = "Hard"
                         board = Board(WIDTH, HEIGHT, screen, removed_cells)
                         break
                 if event.type == pygame.QUIT:
@@ -592,26 +590,7 @@ def main():
                 break
             reset_rect, restart_rect, exit_rect = draw_sudoku_screen()
             pygame.display.update()
-
-            #print(board.click(event.pos[0], event.pos[1]))
-            #Just used this for testing for now
-
-
-            #Used to test selection, cell can be selected but leads to some jank with display :)
-
-            # click = board.click(event.pos[0], event.pos[1])
-            #
-            # if click != None:
-            #     board.selected = board.cells[click[0]][click[1]]
-            #     board.selected.selected = True
-            #     board.selected.screen = screen
-            #     board.selected.draw()
-            #     pass
-            #pygame.display.update()
             for event in pygame.event.get():
-
-                #purely for testing purposes
-
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     selection = board.click(event.pos[0], event.pos[1])
                     if selection != None:
@@ -623,8 +602,12 @@ def main():
                         board.selected.selected = True
                         board.selected.screen = screen
                     elif reset_rect.collidepoint(event.pos):
-                        win = True
-                        end_loop = True
+                        for i in range(9):
+                            for j in range(9):
+                                board.cells[i][j].value = initial_board[i][j]
+                                board.cells[i][j].sketched = ""
+                        reset_rect, restart_rect, exit_rect = draw_sudoku_screen()
+                        pygame.display.update()
                     elif restart_rect.collidepoint(event.pos):
                         main()
                     elif exit_rect.collidepoint(event.pos):
