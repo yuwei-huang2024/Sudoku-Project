@@ -99,9 +99,6 @@ def main():
         sudoku.remove_cells()
         board = sudoku.get_board()
         initial_board = board
-        print(initial_board)
-        print(len(initial_board))
-        print(initial_board[0][0])
         return board
 
     class Board:
@@ -143,11 +140,9 @@ def main():
             #Very rough, just wanna mess with event parameter
             #CHANGED TO MAKE COL/ROW ACCURATE
             x, y = event.pos
-            print(f"Clicked at: ({x}, {y})")
             if 0 <= x <= 600 and 0 <= y <= 600:
                 newCol = x // 67
                 newRow = y // 67
-                print(f"Mapped to: Row {newRow}, Column {newCol}")
                 return (newRow, newCol)
             return None
 
