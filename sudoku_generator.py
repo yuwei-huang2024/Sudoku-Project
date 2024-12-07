@@ -515,10 +515,6 @@ def main():
             pygame.display.update()
             for event in pygame.event.get():
                 if event.type == pygame.MOUSEBUTTONDOWN:
-                    # print(board.board)
-                    # for cell in board.cells:
-                    #     for cell in cell:
-                    #         print(cell.value)
                     selection = board.click(event.pos[0], event.pos[1])
                     if selection != None:
                         if board.selected != None:
