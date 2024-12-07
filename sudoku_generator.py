@@ -268,7 +268,7 @@ def main():
                 #self.isUser = True
 
             if self.selected == True:
-                pygame.draw.rect(self.screen, (255, 0, 0), (cellCol, cellRow, 64, 64),  4)
+                pygame.draw.rect(self.screen, (255, 0, 0), (cellCol, cellRow, 65, 65),  4)
 
     WIDTH = 600
     HEIGHT = 600
