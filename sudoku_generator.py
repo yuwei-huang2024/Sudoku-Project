@@ -3,8 +3,6 @@ import random, pygame, sys, os
 pygame.init()
 pygame.font.init()
 
-
-#TEST
 def main():
     class SudokuGenerator:
         def __init__(self, row_length, removed_cells):
@@ -21,7 +19,6 @@ def main():
         def print_board(self):
             for row in self.board:
                 print(" ".join(str(num) if num != 0 else '.' for num in row))  # for debugging??
-
 
         def valid_in_row(self, row, num):
             return num not in self.board[row]
@@ -43,7 +40,6 @@ def main():
                     and self.valid_in_box(row - row % 3, col - col % 3, num)
             )
 
-
         def fill_box(self, row_start, col_start):
             nums = list(range(1, 10))
             random.shuffle(nums)
@@ -54,18 +50,7 @@ def main():
         def fill_diagonal(self):
             for i in range(0, self.row_length, 3):
                 self.fill_box(i, i)
-        '''
-        DO NOT CHANGE
-        Provided for students
-        Fills the remaining cells of the board
-        Should be called after the diagonal boxes have been filled
-        
-        Parameters:
-        row, col specify the coordinates of the first empty (0) cell
-    
-        Return:
-        boolean (whether or not we could solve the board)
-        '''
+
         def fill_remaining(self, row, col):
             if col >= self.row_length and row < self.row_length - 1:
                 row += 1
@@ -93,30 +78,10 @@ def main():
                     self.board[row][col] = 0
             return False
 
-        '''
-        DO NOT CHANGE
-        Provided for students
-        Constructs a solution by calling fill_diagonal and fill_remaining
-    
-        Parameters: None
-        Return: None
-        '''
         def fill_values(self):
             self.fill_diagonal()
             self.fill_remaining(0, self.box_length)
 
-        '''
-        Removes the appropriate number of cells from the board
-        This is done by setting some values to 0
-        Should be called after the entire solution has been constructed
-        i.e. after fill_values has been called
-        
-        NOTE: Be careful not to 'remove' the same cell multiple times
-        i.e. if a cell is already 0, it cannot be removed again
-    
-        Parameters: None
-        Return: None
-        '''
         def remove_cells(self):
             removed_count = 0
             while removed_count < self.removed_cells:
@@ -126,32 +91,18 @@ def main():
                     self.board[row][col] = 0
                     removed_count += 1
 
-
-    '''
-    DO NOT CHANGE
-    Provided for students
-    Given a number of rows and number of cells to remove, this function:
-    1. creates a SudokuGenerator
-    2. fills its values and saves this as the solved state
-    3. removes the appropriate number of cells
-    4. returns the representative 2D Python Lists of the board and solution
-    
-    Parameters:
-    size is the number of rows/columns of the board (9 for this project)
-    removed is the number of cells to clear (set to 0)
-    
-    Return: list[list] (a 2D Python list to represent the board)
-    '''
-
     def generate_sudoku(size: object, removed: object) -> object:
         sudoku = SudokuGenerator(size, removed)
         sudoku.fill_values()
-        global solution
-        solution = sudoku.get_board()
+        global initial_board
+        board = sudoku.get_board()
         sudoku.remove_cells()
         board = sudoku.get_board()
+        initial_board = board
+        print(initial_board)
+        print(len(initial_board))
+        print(initial_board[0][0])
         return board
-
 
     class Board:
         def __init__(self, width, height, screen, difficulty):
@@ -163,8 +114,7 @@ def main():
             self.selected = None
             self.cells = [
                 [Cell(self.board[i][j],i, j, screen) for j in range(9)]
-                for i in range(9)
-            ]
+                for i in range(9)]
 
         def draw(self):
             my_font = pygame.font.SysFont('Times New Roman', 30)
@@ -182,15 +132,12 @@ def main():
                         self.screen.blit(text_surface, text_rect)
                         # using to test
                         # self.screen.blit(text_surf, text_rect)
-        #Need to make this work with draw_sudoku_screen
-
 
         def select(self, row, col):
             if self.selected != None:
                 self.selected = None
             self.selected = self.cells[row][col]
             self.selected.selected = True
-
 
         def click(self, row, col):
             #Very rough, just wanna mess with event parameter
@@ -202,15 +149,7 @@ def main():
                 newRow = y // 67
                 print(f"Mapped to: Row {newRow}, Column {newCol}")
                 return (newRow, newCol)
-
-
-                    #Need to figure out positioning fully
-
-
-
             return None
-
-
 
         def clear(self):
             #This basically does nothing, need to see how board generates non-user values
@@ -222,9 +161,6 @@ def main():
 
         def sketch(self, value):
             self.sketched_value = value
-
-        def place_number(self, value):
-            pass
 
         def reset_to_original(self):
             for cell in self.cells:
@@ -239,9 +175,6 @@ def main():
                     # if cell.value != cell.sketched:
                     #     return False
             return True
-
-        def update_board(self):
-            pass
 
         def find_empty(self):
             for row in self.cells:
@@ -292,7 +225,6 @@ def main():
                     if len(box_set) != 9:
                         print("box fail")
                         return False
-
                 return True
 
     class Cell:
@@ -305,7 +237,6 @@ def main():
             self.isUser = False
             self.sketched = ""
 
-
         def set_cell_value(self, value):
             self.value = value
 
@@ -315,9 +246,6 @@ def main():
         def draw(self):
             my_font = pygame.font.SysFont('Times New Roman', 30)
             color = (255, 255, 255)
-
-            #Col Issue
-            #CHANGED TO MAKE ROW/COL ACCURATE
 
             cellRow = self.row * 64 + self.row * 3.3
             cellCol = self.col * 64 + self.col * 3.3
@@ -347,12 +275,6 @@ def main():
     LINE_COLOR = (0, 0, 255)
     screen = pygame.display.set_mode((WIDTH, HEIGHT+120))
     pygame.display.set_caption("Sudoku")
-
-    #initializing the board
-    # def initialize_board():
-    #     # 1st approach
-    #     return [["-" for i in range(9)] for j in range(9)]
-    # board = initialize_board()
 
     def draw_sudoku_screen(): # changed draw grid to this function
         # drawing horizontal cell lines
@@ -507,8 +429,6 @@ def main():
         pygame.display.update()
         return easy_rect, medium_rect, hard_rect
 
-    def draw_numbers():
-        pass
     def draw_win_end_screen():
         my_font = pygame.font.SysFont('Times New Roman', 30)
 
@@ -558,10 +478,8 @@ def main():
         python = sys.executable
         os.execv(python, ['python'] + sys.argv)
 
-
     end_loop = False
     selection = None
-    difficulty = ""
     while True:
         # event loop
         while True: # for start screen
@@ -575,20 +493,15 @@ def main():
                         removed_cells = 30
                         end_loop = True
                         board = Board(WIDTH,HEIGHT, screen, removed_cells)
-                        initialBoard = board
                         break
                     elif medium_rect.collidepoint(event.pos):
                         removed_cells = 40
-                        print('2')
                         end_loop = True
-                        difficulty = "Medium"
                         board = Board(WIDTH, HEIGHT, screen, removed_cells)
                         break
                     elif hard_rect.collidepoint(event.pos):
                         removed_cells = 50
-                        print('3')
                         end_loop = True
-                        difficulty = "Hard"
                         board = Board(WIDTH, HEIGHT, screen, removed_cells)
                         break
                 if event.type == pygame.QUIT:
@@ -600,27 +513,12 @@ def main():
                 break
             reset_rect, restart_rect, exit_rect = draw_sudoku_screen()
             pygame.display.update()
-
-            #print(board.click(event.pos[0], event.pos[1]))
-            #Just used this for testing for now
-
-
-            #Used to test selection, cell can be selected but leads to some jank with display :)
-
-            # click = board.click(event.pos[0], event.pos[1])
-            #
-            # if click != None:
-            #     board.selected = board.cells[click[0]][click[1]]
-            #     board.selected.selected = True
-            #     board.selected.screen = screen
-            #     board.selected.draw()
-            #     pass
-            #pygame.display.update()
             for event in pygame.event.get():
-
-                #purely for testing purposes
-
                 if event.type == pygame.MOUSEBUTTONDOWN:
+                    # print(board.board)
+                    # for cell in board.cells:
+                    #     for cell in cell:
+                    #         print(cell.value)
                     selection = board.click(event.pos[0], event.pos[1])
                     if selection != None:
                         if board.selected != None:
@@ -631,8 +529,12 @@ def main():
                         board.selected.selected = True
                         board.selected.screen = screen
                     elif reset_rect.collidepoint(event.pos):
-                        win = True
-                        end_loop = True
+                        for i in range(9):
+                            for j in range(9):
+                                board.cells[i][j].value = initial_board[i][j]
+                                board.cells[i][j].sketched = ""
+                        reset_rect, restart_rect, exit_rect = draw_sudoku_screen()
+                        pygame.display.update()
                     elif restart_rect.collidepoint(event.pos):
                         main()
                     elif exit_rect.collidepoint(event.pos):
@@ -671,31 +573,19 @@ def main():
                         selection = selection[0], selection[1]+1
                         board.selected.selected = True
                         board.selected.screen = screen
-
                 if event.type == pygame.KEYDOWN and board.selected != None and board.selected.isUser != True:
                     if event.key == pygame.K_RETURN and board.selected.sketched != "":
                         board.selected.set_cell_value(board.selected.sketched)
                         print(board.selected.value)
                         continue
-
-                    if board.selected.value != board.selected.sketched and 49 <= event.key and event.key <= 57:
+                    if board.selected.value != board.selected.sketched and 49 <= event.key and event.key <= 57 and board.board[selection[0]][selection[1]] == 0:
                         board.selected.set_sketched_value(chr(event.key))
-                        # board.selected.value = chr(event.key)
-                        # print(board.selected)
-
                 if event.type == pygame.KEYDOWN and event.key == pygame.K_BACKSPACE:
                     print(selection)
                     if selection != None:
                         board.selected.value = ""
                         board.selected.sketched = " "
                         board.selected.isUser = False
-
-
-
-                    # board.selected.set_sketched_value(chr(event.key))
-                    # #board.selected.value = chr(event.key)
-                    # draw_sudoku_screen()
-                    # # print(board.selected)
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     sys.exit()
@@ -735,7 +625,6 @@ def main():
                     if event.type == pygame.QUIT:
                         pygame.quit()
                         sys.exit()
-
 
 if __name__ == "__main__":
     while True:
