@@ -4,7 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d7df3f38-a755-49e6-92db-ac6084d85cb9" name="Changes" comment="" />
+    <list default="true" id="d7df3f38-a755-49e6-92db-ac6084d85cb9" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sudoku_generator.py" beforeDir="false" afterPath="$PROJECT_DIR$/sudoku_generator.py" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -64,6 +67,9 @@
       <workItem from="1733421097248" duration="5333000" />
       <workItem from="1733426771861" duration="879000" />
       <workItem from="1733523908703" duration="1633000" />
+      <workItem from="1733539547738" duration="153000" />
+      <workItem from="1733543493054" duration="71000" />
+      <workItem from="1733543581433" duration="158000" />
     </task>
     <servers />
   </component>
@@ -82,6 +88,6 @@
     </breakpoint-manager>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/Sudoku_Project$sudoku_generator.coverage" NAME="sudoku_generator Coverage Results" MODIFIED="1733539356230" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/Sudoku_Project$sudoku_generator.coverage" NAME="sudoku_generator Coverage Results" MODIFIED="1733543597052" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>
